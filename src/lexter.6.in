@@ -1,0 +1,57 @@
+.\" Lexter man page
+.TH LEXTER 6 "February 12, 2001" "v@VERSION@" "Player's Guide"
+.SH NAME
+lexter \- a curses falling letters puzzle game
+.SH SYNOPSIS
+.B lexter 
+[
+.B \-v
+|
+.B \-h
+|
+.B \-s
+|
+.B \-d dictionary
+]
+.SH DESCRIPTION
+Lexter is a real-time word puzzle. Arrange the falling letters into words
+to score points. Words can be formed in any direction except diagonal.
+Palindromes are counted twice (forwards and backwards). Lexter supports
+multiple dictionaries. Letter scores and frequencies will vary with each
+dictionary. In addition to the characters found in the dictionary there
+is a "blank" character. Anytime before the character has landed you can
+press a key to assign it a valid letter.
+.SH OPTIONS
+.SS -v
+Show version and exit
+.SS -h
+Show help and exit
+.SS -s
+Show score file and exit
+.SS -d dictionary
+Use a different dictionary. The default is the local language code.
+.SH IN GAME
+.SS Left/Right/Down
+Move letter
+.SS Spacebar
+Drop letter
+.SS P
+Pause game. This blanks the pit while paused.
+.SS H
+Show help.
+.SS L
+Show letter scores and probabilities.
+.SS W
+Show words found.
+.SS S
+Saves a screenshot in the current directory.
+.SS Q
+Quit game.
+.SH FILES
+.I @localstatedir@/lexter.scores
+.br
+.I @datadir@/lexter/dict.*
+.SH BUGS
+The game probably needs more play testing.
+.SH AUTHOR
+Mark Pulford <mark@kyne.com.au>

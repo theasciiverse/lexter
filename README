@@ -1,0 +1,140 @@
+ _            _
+| |   _____ _| |_ ___ _ _
+| |__/ -_) \ /  _/ -_) '_|
+|____\___/_\_\\__\___|_|v1.0.3
+
+Lexter is covered by the GNU GPL. See the file named "COPYING" in this
+archive for details.
+
+
+General
+-------
+
+Lexter is a real-time word puzzle. Arrange the falling letters into
+words to score points. Words can be formed in any direction except
+diagonal. Palindromes are counted twice (forwards and backwards).
+
+Lexter supports multiple dictionaries. Letter scores and frequencies
+will vary with each dictionary. In addition to the characters found in
+the dictionary there is a "blank" character. Before the character has
+landed you can press a key to assign it a valid letter.
+
+Lexter also supports internationalisation through the GNU gettext
+library.  However, there are no translations available at the moment.
+Contributions are welcome.
+
+
+Installation
+------------
+
+Requirements:
+- Curses (ncurses works fine)
+- GNU Gettext (optional)
+
+To install you can do the usual "./configure ; make ; make install",
+but you might not like the default configure file locations.
+
+If GNU Gettext is installed on your system but configure cannot find
+it you will need to run configure differently specifying where to find
+the include and library files. For example:
+
+CPPFLAGS=-I/usr/local/include LDFLAGS=-L/usr/local/lib ./configure
+
+Useful configure options:
+--help
+	Shows some more detailed help
+--datadir
+	Dictionaries are stored under DATADIR/lexter/.
+--localstatedir
+	Directory which will hold the lexter.scores high score file.
+--disable-nls
+	Gives a smaller binary without gettext.
+--with-included-gettext
+	Force configure to use the gettext contained in this archive.
+--enable-world-writeable
+	Use world writeable high file. The default is user/group writeable.
+--with-ncurses
+	Force compiling under ncurses. Should only be necessary when
+	configure detects a working curses but you would prefer to use
+	ncurses for some reason.
+
+For example:
+
+./configure --bindir=/usr/local/games --datadir=/usr/local/games/lib \
+	--localstatedir=/var/lib/games
+
+Lexter will attempt to create the high score file if necessary. It may
+fail due to permission settings in your filesystem. If so, you will
+need to create the high score file. For example making Lexter setgid:
+
+chown root.games /usr/local/games/lexter
+chmod g+s /usr/local/games/lexter
+touch /var/lib/games/lexter.scores
+chown root.games /var/lib/games/lexter.scores
+chmod 664 /var/lib/games/lexter.scores
+
+
+In Game Keys
+------------
+Left/Right/Down		Move letter
+Spacebar		Drop letter
+P			Pause game
+H			Show help
+L			Show letter scores & probabilities
+W			Show words found
+S			Take screenshot
+Q			Quit game
+
+
+Dictionaries
+------------
+
+The Lexter code is character set independent. Any character set
+dependency comes from the dictionary being used. The dictionaries in
+this package use the ISO 8859-1 (Latin-1) character set:
+
+en	ASCII		(A subset of ISO 8859-1, and many other charsets)
+fr	ISO 8859-1
+
+The dictionary character set should match your terminal character set,
+otherwise your games are going be very weird. The "en" dictionary
+should work just about everywhere. If you're not sure what character
+set you are using just try a dictionary, it'll be pretty obvious if it
+doesn't match.
+
+You can drop your own dictionary into the lexter dictionary directory
+and use that. Lexter looks for a dictionary by the name of your 2
+letter language code first (en, fr, ru, etc..). You can use "-d" to
+specify a dictionary named differently. The dictionary should only
+contain line feeds (\n) and words. Everything other than the line
+feeds is considered a valid character for the game. Standard Unix text
+files are fine, but DOS text files will cause problems.
+
+If you make your own dictionary make sure you strip out the smaller
+"words". Removing single character "words" is required since they will
+always match. Also remove any words containing capitals. ASCII
+captital letters are used by the game which stops them from updating
+any falling blank letters.
+
+The dictionaries in this package only include words between 4-10
+letters long, even though there is no limitation in the game code.
+
+Dictionaries aren't limited to your language. You can have whatever
+words/characters you like. They could be topical like place names or
+even famous number sequences. It might make for a very difficult game ;).
+
+
+Feedback
+--------
+
+Lexter needs some play testing. Some areas that may need tweaking:
+- letter probabilities
+- speed of play and speed increases
+- pit size
+- game length
+
+GNU Gettext translations to other languages are welcome. Feel free to email
+me with any comments or suggestions.
+
+Mark Pulford
+<mark@kyne.com.au>

@@ -1,0 +1,263 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR Free Software Foundation, Inc.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"POT-Creation-Date: 2001-03-21 14:31+1030\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=CHARSET\n"
+"Content-Transfer-Encoding: ENCODING\n"
+
+#: src/dict.c:79 src/dict.c:110
+msgid "Out of memory"
+msgstr ""
+
+#: src/dict.c:90
+msgid "Partial read"
+msgstr ""
+
+#: src/scores.c:134
+#, c-format
+msgid "High score open: %s"
+msgstr ""
+
+#: src/scores.c:148
+#, c-format
+msgid "High score locking: %s"
+msgstr ""
+
+#: src/scores.c:156
+#, c-format
+msgid "High score read: %s"
+msgstr ""
+
+#: src/scores.c:168
+msgid "Unable to get username"
+msgstr ""
+
+#: src/scores.c:205
+#, c-format
+msgid "High score write: %s"
+msgstr ""
+
+#: src/scores.c:209
+#, c-format
+msgid "High score seek: %s"
+msgstr ""
+
+#: src/text.c:66
+#, c-format
+msgid "Lexter v%s\n"
+msgstr ""
+
+#: src/text.c:70
+msgid "Error: dictionary name must not contain '/' or '.'\n"
+msgstr ""
+
+#: src/text.c:76
+msgid "lexter: missing parameter\n"
+msgstr ""
+
+#: src/text.c:90
+msgid "Loading dictionary..."
+msgstr ""
+
+#: src/text.c:92
+msgid "Press any key to start the game"
+msgstr ""
+
+#: src/text.c:110
+#, c-format
+msgid "ERROR: %s\n"
+msgstr ""
+
+#: src/text.c:114
+msgid "#   Name       Total   Words   Blocks   Dictionary   Date\n"
+msgstr ""
+
+#: src/text.c:128
+msgid "usage: lexter [ -v | -h | -s | -d dict ]\n"
+msgstr ""
+
+#: src/text.c:129
+msgid "-v           show version\n"
+msgstr ""
+
+#: src/text.c:130
+msgid "-h           show help\n"
+msgstr ""
+
+#: src/text.c:131
+msgid "-d dict      run game with a different dictionary\n"
+msgstr ""
+
+#: src/text.c:132
+msgid "-s           show high score table\n"
+msgstr ""
+
+#: src/text.c:159
+msgid "Terminal too small, Lexter requires at least 80x24\n"
+msgstr ""
+
+#: src/text.c:176
+#, c-format
+msgid "Open /dev/tty: %s"
+msgstr ""
+
+#: src/text.c:200
+#, c-format
+msgid "Lexter v%s"
+msgstr ""
+
+#: src/text.c:233
+#, c-format
+msgid "Dictionary: %-8s    Blocks: %d"
+msgstr ""
+
+#: src/text.c:234
+#, c-format
+msgid "Next: [%c]  Words: %-5d Score: %d"
+msgstr ""
+
+#: src/text.c:248
+msgid "Pts:  Found:"
+msgstr ""
+
+#: src/text.c:273
+msgid "Help"
+msgstr ""
+
+#: src/text.c:274
+msgid "----"
+msgstr ""
+
+#: src/text.c:275
+msgid "left/right   Move the block"
+msgstr ""
+
+#: src/text.c:276
+msgid "down         Lower the block"
+msgstr ""
+
+#: src/text.c:277
+msgid "space        Drop the block"
+msgstr ""
+
+#: src/text.c:278
+msgid "P            Pause game"
+msgstr ""
+
+#: src/text.c:279
+msgid "L            Show letter scores"
+msgstr ""
+
+#: src/text.c:280
+msgid "W            Show found words"
+msgstr ""
+
+#: src/text.c:281
+msgid "S            Take screenshot"
+msgstr ""
+
+#: src/text.c:282
+msgid "H            Show help"
+msgstr ""
+
+#: src/text.c:283
+msgid "Q            Quit game"
+msgstr ""
+
+#: src/text.c:308
+msgid "  Score  Chance       Score  Chance"
+msgstr ""
+
+#: src/text.c:356
+#, c-format
+msgid "Error getting key: %s"
+msgstr ""
+
+#: src/text.c:422
+msgid "Error refreshing screen"
+msgstr ""
+
+#. Don't use if_error, otherwise they can pause the game
+#: src/text.c:453
+#, c-format
+msgid "Screenshot open failed: %s"
+msgstr ""
+
+#: src/text.c:472
+msgid "partial write"
+msgstr ""
+
+#: src/text.c:473
+#, c-format
+msgid "Screenshot write failed: %s"
+msgstr ""
+
+#: src/text.c:481
+#, c-format
+msgid "Saved %s"
+msgstr ""
+
+#: src/text.c:496
+msgid "#   Name       Total   Words   Blocks   Dictionary   Date"
+msgstr ""
+
+#: src/text.c:517
+msgid "ERROR: "
+msgstr ""
+
+#: src/text.c:522
+msgid " <press key>"
+msgstr ""
+
+#: src/lexter.c:136
+#, c-format
+msgid "Unable to load %s dictionary, using en instead"
+msgstr ""
+
+#: src/lexter.c:138
+#, c-format
+msgid "Dictionary load: %s"
+msgstr ""
+
+#: src/lexter.c:159
+msgid "Press a key to view the high score table"
+msgstr ""
+
+#: src/lexter.c:168
+msgid "Press a key to quit"
+msgstr ""
+
+#: src/lexter.c:244
+msgid "No letter chosen, picking a random one!"
+msgstr ""
+
+#: src/lexter.c:286
+#, c-format
+msgid "Found 1 word for %d points."
+msgstr ""
+
+#: src/lexter.c:288
+#, c-format
+msgid "Found %d words for %d points."
+msgstr ""
+
+#: src/lexter.c:291
+msgid " Pit empty bonus!"
+msgstr ""
+
+#: src/lexter.c:323
+msgid "Cannot pause while a blank letter is in play"
+msgstr ""
+
+#: src/lexter.c:326
+msgid "The game is paused, press any key to continue"
+msgstr ""

@@ -1,0 +1,19 @@
+Version 1.0.3 (Mar 23 2001)
+* Portability fix for Solaris
+* Separated scores and word list updates
+* Decreased minimum game delay
+
+Version 1.0.2 (Mar 15 2001)
+* Each dictionary gets equal space in the high score table
+* Better Curses detection
+* Tidied cursor handling when invisible cursors not supported, and other
+  misc cosmetic fixes
+* Increased high score table to 20 entries
+
+Version 1.0.1 (Feb 15 2001)
+* Added next letter to score display
+* Added dictionary name sanity check
+* Minor cosmetic changes
+
+Version 1.0 (Feb 14 2001)
+* First public release.

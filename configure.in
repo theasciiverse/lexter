@@ -1,0 +1,63 @@
+dnl Init
+AC_INIT(acconfig.h)
+AM_INIT_AUTOMAKE(lexter, 1.0.3)
+# config.h no longer in src/ since intl/ uses it too
+AM_CONFIG_HEADER(config.h)
+
+ALL_LINGUAS=""
+
+AC_ARG_ENABLE(world-writeable,
+[  --enable-world-writeable
+                          use world writeable high score file [no]],,
+enable_world_writeable=no)
+
+dnl Checks for programs.
+AC_PROG_AWK
+AC_PROG_CC
+AC_PROG_MAKE_SET
+AC_PROG_INSTALL
+AC_PROG_LN_S
+AC_PROG_RANLIB
+
+# This uses AC_PROG_CPP so it must be called after AC_PROG_CC
+AM_GNU_GETTEXT
+
+dnl Checks for libraries.
+AC_CHECK_CURSES
+if test "$curses_working" = "no"
+then
+	AC_MSG_ERROR([unable to find functional curses headers and library.
+If you are missing curses or need a more functional version check out Ncurses:
+http://www.gnu.org/software/ncurses/])
+fi
+
+dnl Checks for header files.
+AC_HEADER_STDC
+AC_CHECK_HEADERS(fcntl.h limits.h strings.h sys/file.h sys/time.h unistd.h,,
+	AC_MSG_ERROR([Missing required header]))
+AC_CHECK_HEADERS(malloc.h)
+
+dnl Checks for typedefs, structures, and compiler characteristics.
+AC_C_CONST
+AC_C_INLINE
+AC_TYPE_SIZE_T
+AC_HEADER_TIME
+
+dnl Checks for library functions.
+AC_CHECK_FUNCS(getcwd gettimeofday getwd putenv select strdup strerror,,
+	AC_MSG_ERROR([Missing required function]))
+AC_FUNC_ALLOCA
+AC_FUNC_MMAP
+
+test "x$USE_INCLUDED_LIBINTL" = xyes && INTLINCS="-I../intl"
+AC_SUBST(INTLINCS)
+
+test "x$prefix" = xNONE && prefix=$ac_default_prefix
+datadir=`eval echo $datadir`
+localstatedir=`eval echo $localstatedir`
+AC_DEFINE_UNQUOTED(SCOREFILE, "${localstatedir}/lexter.scores")
+AC_DEFINE_UNQUOTED(DICTDIR, "${datadir}/lexter")
+AC_DEFINE_UNQUOTED(LOCALEDIR, "${prefix}/${DATADIRNAME}/locale")
+test "x$enable_world_writeable" = xyes && AC_DEFINE_UNQUOTED(SC_WORLDWRITE,)
+
+AC_OUTPUT(Makefile src/Makefile data/Makefile intl/Makefile po/Makefile.in lexter.spec src/lexter.6)
