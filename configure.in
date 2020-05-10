@@ -44,7 +44,7 @@ AC_TYPE_SIZE_T
 AC_HEADER_TIME
 
 dnl Checks for library functions.
-AC_CHECK_FUNCS(getcwd gettimeofday getwd putenv select strdup strerror,,
+AC_CHECK_FUNCS(getcwd gettimeofday putenv select strdup strerror,,
 	AC_MSG_ERROR([Missing required function]))
 AC_FUNC_ALLOCA
 AC_FUNC_MMAP
