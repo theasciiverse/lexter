@@ -87,15 +87,18 @@ void game_run()
 	game_end(&g);
 }
 
-/* C & posix are not valid langs, return nothing and let the caller
- * find a sane language */
+/* Only a two letter language code ("fr" from "fr_FR.UTF-8") counts;
+ * C, C.UTF-8, POSIX and the like give nothing, so the caller looks
+ * further */
 static void getlangenvn(char *env, char *name, int len)
 {
 	char *e;
 
 	memset(env, 0, len);
 	e = getenv(name);
-	if(e && strcmp(e, "C") && strcmp(e, "posix"))
+	if(e && e[0] >= 'a' && e[0] <= 'z' && e[1] >= 'a' && e[1] <= 'z'
+			&& (e[2] == 0 || e[2] == '_' || e[2] == '.' || e[2] == '@'
+				|| e[2] == ':'))
 		strncpy(env, e, len-1);
 }
 
@@ -132,8 +135,10 @@ void game_load_dict(const char *dname)
 	/* Fall back to english dictionary if the requested dictionary cannot
 	 * be found. */
 	if(!dict_load(dname, &err)) {
+		/* No dictionary for the player's language is the usual case,
+		 * not an error worth stopping for */
 		if(def && dict_load("en", NULL)) {
-			if_error(_("Unable to load %s dictionary, using en instead"), dname);
+			;
 		} else {
 			if_error(_("Dictionary load: %s"), err);
 			if_exit(-1);
