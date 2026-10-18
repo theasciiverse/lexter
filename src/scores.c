@@ -22,6 +22,7 @@
 #include "iface.h"
 #include "dict.h"
 #include "list.h"
+#include "paths.h"
 
 struct assoc {
 	char *str;
@@ -44,12 +45,17 @@ static void assoc_free(struct list **l);
 static int score_open()
 {
 	int fd, u;
+	const char *file = paths_userfile("scores");
 
+	if(!file) {
+		errno = ENOENT;
+		return -1;
+	}
 	u = umask(0);
-	fd = open(SCOREFILE, O_CREAT|O_EXCL|O_RDWR, SCOREPERM);
+	fd = open(file, O_CREAT|O_EXCL|O_RDWR, SCOREPERM);
 	umask(u);
 	if(fd<0 && EEXIST==errno)	/* File already exists */
-		fd = open(SCOREFILE, O_RDWR);
+		fd = open(file, O_RDWR);
 
 	return fd;
 }

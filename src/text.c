@@ -35,6 +35,7 @@
 #include "words.h"
 #include "lang.h"
 #include "dict.h"
+#include "paths.h"
 
 #define INFOX	40
 
@@ -438,11 +439,19 @@ void if_screenshot()
 	chtype line[81];	/* mvinchstr returns null terminated array */
 	char buf[81];
 	int fd, i;
-	char fn[32];
+	char fn[1024], name[32];
+	const char *file;
 
-	/* Open next free screenshot file */
+	/* Open next free screenshot file, in the player's own folder */
+	fd = -1;
 	for(i=0; i<10; i++) {
-		snprintf(fn, 32, "lexter%0d.txt", i);
+		snprintf(name, 32, "lexter%0d.txt", i);
+		file = paths_userfile(name);
+		if(!file) {
+			errno = ENOENT;
+			break;
+		}
+		snprintf(fn, sizeof(fn), "%s", file);
 		fd = open(fn, O_CREAT|O_EXCL|O_WRONLY,
 			S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH);
 		if(fd >= 0 || errno != EEXIST)

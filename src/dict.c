@@ -23,6 +23,7 @@
 #include <string.h>
 
 #include "dict.h"
+#include "paths.h"
 
 static char **windex;	/* Contains the index to the dictionary */
 static char *dict;	/* Contains the dictionary */
@@ -55,7 +56,7 @@ int dict_load(const char *dname, const char **err)
 
 	snprintf(dict_name, 9, "%s", dname);
 
-	snprintf(fn, 256, "%s/dict.%s", DICTDIR, dict_name);
+	snprintf(fn, 256, "%s/dict.%s", paths_dictdir(), dict_name);
 	fd = open(fn, O_RDONLY);
 	if(fd < 0) {
 		if(err) {

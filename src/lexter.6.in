@@ -44,13 +44,20 @@ Show letter scores and probabilities.
 .SS W
 Show words found.
 .SS S
-Saves a screenshot in the current directory.
+Saves a screenshot, lexter0.txt to lexter9.txt, in the player's data folder
+(see FILES).
 .SS Q
 Quit game.
 .SH FILES
-.I @localstatedir@/lexter.scores
+.I $XDG_DATA_HOME/lexter/scores
+(else
+.IR ~/.local/share/lexter/scores )
+holds the player's high scores, and screenshots go beside it.
 .br
 .I @datadir@/lexter/dict.*
+are the dictionaries, unless
+.B LEXTER_DICTDIR
+names another folder or they are beside the program.
 .SH BUGS
 The game probably needs more play testing.
 .SH AUTHOR
