@@ -10,6 +10,9 @@
 
 #include <config.h>
 
+/* Wide-character curses, for Latin-1 dictionaries on UTF-8 terminals */
+#define NCURSES_WIDECHAR 1
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
@@ -22,6 +25,9 @@
 #include <errno.h>
 #include <time.h>
 #include <assert.h>
+#include <locale.h>
+#include <langinfo.h>
+#include <wchar.h>
 
 #ifdef HAVE_CURSES_H
 #include <curses.h>
@@ -51,14 +57,55 @@ static WINDOW *gw, *gw_copy;
 #undef attron
 #undef attroff
 #undef mvinchnstr
-#define mvaddch(y, x, c)	mvwaddch(gw, y, x, c)
-#define mvaddstr(y, x, s)	mvwaddstr(gw, y, x, s)
-#define mvprintw(y, x, ...)	mvwprintw(gw, y, x, __VA_ARGS__)
+#define mvaddch(y, x, c)	l1_addch(y, x, c)
+#define mvaddstr(y, x, s)	l1_addstr(y, x, s)
+#define mvprintw(y, x, ...)	l1_printw(y, x, __VA_ARGS__)
 #define attron(a)		wattron(gw, a)
 #define attroff(a)		wattroff(gw, a)
 #define mvinchnstr(y, x, l, n)	mvwinchnstr(gw, y, x, l, n)
 
 static void place_window();
+
+/* The game's text is bytes in the dictionary's character set: ASCII for
+ * en, ISO 8859-1 (Latin-1) for fr. On a UTF-8 terminal each byte is drawn
+ * as the Unicode character with that number, which is what Latin-1 is,
+ * so the French accents show; elsewhere bytes go out as they are. */
+static int utf8;
+
+static void l1_addstr(int y, int x, const char *s)
+{
+	wchar_t w[128];
+	int n;
+
+	if(!utf8) {
+		mvwaddstr(gw, y, x, s);
+		return;
+	}
+	for(n = 0; s[n] && n < 127; n++)
+		w[n] = (unsigned char) s[n];
+	w[n] = 0;
+	mvwaddnwstr(gw, y, x, w, n);
+}
+
+static void l1_addch(int y, int x, int c)
+{
+	char s[2];
+
+	s[0] = (char) c;
+	s[1] = 0;
+	l1_addstr(y, x, s);
+}
+
+static void l1_printw(int y, int x, const char *fmt, ...)
+{
+	va_list args;
+	char buf[128];
+
+	va_start(args, fmt);
+	vsnprintf(buf, sizeof(buf), fmt, args);
+	va_end(args);
+	l1_addstr(y, x, buf);
+}
 
 static void show_help();
 static void show_scores();
@@ -70,8 +117,9 @@ int main(int argc,char **argv)
 	char *dict = NULL;
 	int o;
 
-#ifdef ENABLE_NLS
 	setlocale(LC_ALL, "");
+	utf8 = !strcmp(nl_langinfo(CODESET), "UTF-8");
+#ifdef ENABLE_NLS
 	bindtextdomain(PACKAGE, LOCALEDIR);
 	textdomain(PACKAGE);
 #endif
@@ -371,7 +419,19 @@ int if_getaction(struct timeval *delay)
 		} else
 			wtimeout(gw, -1);
 		copywin(gw, gw_copy, 0, 0, 0, 0, 23, 79, FALSE);
-		c = wgetch(gw);
+		{
+			/* a typed letter can be several bytes on a UTF-8
+			 * terminal; Latin-1 is the first 256 code points */
+			wint_t wc;
+			int r = wget_wch(gw, &wc);
+
+			if(r == ERR)
+				c = ERR;
+			else if(r == KEY_CODE_YES || wc < 256)
+				c = (int) wc;
+			else
+				c = 0;	/* not a letter any dictionary has */
+		}
 		if(c != KEY_RESIZE)
 			break;
 		place_window();
