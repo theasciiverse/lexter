@@ -48,7 +48,7 @@ static const char *exe_dir(void)
 
 const char *paths_dictdir(void)
 {
-	static char found[PATH_MAX];
+	static char found[PATH_MAX + 16];
 	const char *env = getenv("LEXTER_DICTDIR");
 	const char *dir;
 	struct stat st;
@@ -86,7 +86,7 @@ static int make_dirs(char *path)
 
 const char *paths_userfile(const char *name)
 {
-	static char file[PATH_MAX];
+	static char file[PATH_MAX + 64];
 	char dir[PATH_MAX];
 	const char *xdg = getenv("XDG_DATA_HOME");
 	const char *home = getenv("HOME");

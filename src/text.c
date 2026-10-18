@@ -39,7 +39,26 @@
 
 #define INFOX	40
 
-static int input_fd;
+/* The game draws on an 80x24 window centred in the terminal, gw, and
+ * keeps a pad copy of it (pads are never cut down when the terminal
+ * shrinks) to put back after a resize. The curses calls below are the
+ * stdscr ones, pointed at gw. */
+static WINDOW *gw, *gw_copy;
+
+#undef mvaddch
+#undef mvaddstr
+#undef mvprintw
+#undef attron
+#undef attroff
+#undef mvinchnstr
+#define mvaddch(y, x, c)	mvwaddch(gw, y, x, c)
+#define mvaddstr(y, x, s)	mvwaddstr(gw, y, x, s)
+#define mvprintw(y, x, ...)	mvwprintw(gw, y, x, __VA_ARGS__)
+#define attron(a)		wattron(gw, a)
+#define attroff(a)		wattroff(gw, a)
+#define mvinchnstr(y, x, l, n)	mvwinchnstr(gw, y, x, l, n)
+
+static void place_window();
 
 static void show_help();
 static void show_scores();
@@ -164,19 +183,20 @@ void if_init()
 	cbreak();		/* Disable line buffering */
 	noecho();
 	nonl();			/* Disable NewLine translation */
-	intrflush(stdscr, FALSE);
-	keypad(stdscr, TRUE);
-	nodelay(stdscr, TRUE);	/* Make getch() non blocking */
+	gw = newwin(24, 80, (my-24)/2, (mx-80)/2);
+	gw_copy = newpad(24, 80);
+	if(!gw || !gw_copy) {
+		endwin();
+		printf(_("Unable to make the game window\n"));
+		exit(-1);
+	}
+	intrflush(gw, FALSE);
+	keypad(gw, TRUE);
 	/* Invis cursor, or make it small if possible */
 	if(ERR == curs_set(0))
 		curs_set(1);
-	scrollok(stdscr, FALSE);
-
-	input_fd = open("/dev/tty", O_RDONLY);
-	if(input_fd < 0) {
-		if_error(_("Open /dev/tty: %s"), strerror(errno));
-		if_exit(-1);
-	}
+	scrollok(gw, FALSE);
+	refresh();
 
 	if_drawpit();
 
@@ -341,31 +361,22 @@ void if_putmsg(const char *fmt, ...)
  */
 int if_getaction(struct timeval *delay)
 {
-	fd_set set;
-	int err;
 	int c;
 
-	/* Using select for more fine grained timeouts */
-	if(delay) {
-		FD_ZERO(&set);
-		FD_SET(input_fd, &set);
-
-		err = select(FD_SETSIZE, &set, NULL, NULL, delay);
-		if(err < 0) {
-			if(errno == EINTR)
-				return NO_ACT;
-			if_error(_("Error getting key: %s"), strerror(errno));
-			if_exit(-1);
-		}
-
-		if(err == 0)
+	/* Wait for a key through curses: at most *delay, or for good */
+	for(;;) {
+		if(delay) {
+			long ms = delay->tv_sec*1000L + delay->tv_usec/1000;
+			wtimeout(gw, ms > 0 ? (int) ms : 0);
+		} else
+			wtimeout(gw, -1);
+		copywin(gw, gw_copy, 0, 0, 0, 0, 23, 79, FALSE);
+		c = wgetch(gw);
+		if(c != KEY_RESIZE)
+			break;
+		place_window();
+		if(delay)	/* let the caller work out the time left */
 			return NO_ACT;
-
-		c = getch();
-	} else {
-		nodelay(stdscr, FALSE);
-		c = getch();
-		nodelay(stdscr, TRUE);
 	}
 
 	switch(c) {
@@ -414,20 +425,35 @@ void if_flushinput()
 
 void if_refresh()
 {
-	int mx, my;
+	wmove(gw, 23, 79);
 
-	getmaxyx(stdscr, my, mx);
-	move(my-1, mx-1);
-
-	if(refresh() == ERR) {
+	if(wrefresh(gw) == ERR) {
 		if_error(_("Error refreshing screen"));
 		if_exit(-1);
 	}
 }
 
+/* After a resize: the window centred again, and whole */
+static void place_window()
+{
+	int mx, my, h, w;
+
+	getmaxyx(stdscr, my, mx);
+	getmaxyx(gw, h, w);
+	if(h != 24 || w != 80) {
+		/* ncurses cut it down for a smaller terminal */
+		wresize(gw, 24, 80);
+		copywin(gw_copy, gw, 0, 0, 0, 0, 23, 79, FALSE);
+	}
+	mvwin(gw, my > 24 ? (my-24)/2 : 0, mx > 80 ? (mx-80)/2 : 0);
+	erase();
+	refresh();
+	touchwin(gw);
+	if_refresh();
+}
+
 void if_exit(char code)
 {
-	close(input_fd);
 	endwin();
 	exit(code);
 }
