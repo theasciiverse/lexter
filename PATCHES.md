@@ -58,6 +58,10 @@ Packaging), so these change nothing in our binaries.
   language without a dictionary. Only a two-letter code counts now, and a
   missing dictionary for the player's language falls back to English
   without the error; `-d` still reports one.
+- **The high score name from the environment.** It was always the
+  account name from getpwuid; now `$USER`, else `$LOGNAME`, else the
+  account name, so a player's own name shows and a recording made with
+  `USER=player` does not show the recording machine's login.
 - **Centred in the terminal, also after a resize; keys through curses.**
   The 80x24 screen is drawn on a window centred in the terminal (the
   stdscr calls in text.c pointed at it), centred again on KEY_RESIZE and
@@ -73,9 +77,9 @@ Packaging), so these change nothing in our binaries.
   characters, so an é typed for a blank arrives as one key. Other
   terminals get bytes as before; the dictionaries are unchanged.
 
-Windows: not built. It would need the user name from the environment
-instead of getpwuid, LockFileEx instead of flock for the score file,
-GetModuleFileName instead of /proc/self/exe, and a wide PDCurses.
+Windows: not built. It would need LockFileEx instead of flock for the
+score file, GetModuleFileName instead of /proc/self/exe, and a wide
+PDCurses.
 
 ## Packaging (new files)
 
@@ -87,7 +91,7 @@ GetModuleFileName instead of /proc/self/exe, and a wide PDCurses.
 - `asciiverse/package.sh`: one archive per target with the binary, both
   dictionaries, the man page, README, COPYING and this file.
 - `asciiverse/record-preview.py`, `asciiverse/lexter.cast`: the catalog
-  preview (100x30, 51 s) and the player that recorded it, reading the
+  preview (100x30, 52 s) and the player that recorded it, reading the
   screen through pyte: for each letter (or each letter a blank could be)
   it tries every column, preferring finished words, then runs that are
   part of a dictionary word, then low stacks, and quits into the high

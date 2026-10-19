@@ -65,6 +65,18 @@ static int score_open()
 static int get_username(char *name, int size)
 {
 	struct passwd *p;
+	const char *env;
+
+	/* the environment's name first, as the shell and most programs see
+	 * it, then the account's */
+	env = getenv("USER");
+	if(!env || !*env)
+		env = getenv("LOGNAME");
+	if(env && *env) {
+		strncpy(name, env, size);
+		name[size-1] = 0;
+		return 1;
+	}
 
 	p = getpwuid(getuid());
 	if(!p)
