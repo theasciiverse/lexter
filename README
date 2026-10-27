@@ -1,3 +1,18 @@
+Play it with Asciiverse
+=======================
+
+With av, the Asciiverse client (https://asciiverse.sh):
+
+    av install lexter
+    av play lexter
+
+Or download the archive for your system from this repository's Releases,
+unpack it and run ./lexter (lexter.exe on Windows).
+
+The original README follows.
+
+------------------------------------------------------------------------
+
  _            _
 | |   _____ _| |_ ___ _ _
 | |__/ -_) \ /  _/ -_) '_|

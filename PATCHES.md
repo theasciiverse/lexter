@@ -80,6 +80,9 @@ Packaging), so these change nothing in our binaries.
 Windows: not built. It would need LockFileEx instead of flock for the
 score file, GetModuleFileName instead of /proc/self/exe, and a wide
 PDCurses.
+- **How to play it, at the top of README.** A short note on installing and
+  starting it with av, or from a release archive; the original text follows
+  unchanged.
 
 ## Packaging (new files)
 
